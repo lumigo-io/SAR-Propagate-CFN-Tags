@@ -8,7 +8,11 @@ const describeStack = async (stackName) => {
 	}).promise();
   
 	if (_.isEmpty(resp.Stacks)) {
-		throw new Error(`${stackName} not found`);
+		return { 
+			stackId: null, 
+			tags: {}, 
+			resources: [] 
+		};
 	}
 
 	const stack = resp.Stacks[0];

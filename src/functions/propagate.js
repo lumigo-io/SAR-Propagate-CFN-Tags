@@ -7,7 +7,13 @@ module.exports.handler = async (event) => {
 	log.debug("received event...", event);
   
 	const stackName = _.get(event, "detail.requestParameters.stackName");
-	const { tags, resources } = await cloudFormation.describeStack(stackName);
+	const { stackId, tags, resources } = await cloudFormation.describeStack(stackName);
+  
+	if (!stackId) {
+		log.warn("stack is not found, skipped...", { stackName });
+		return;
+	}
+
 	log.debug("found stack...", {
 		stackName,
 		tags,

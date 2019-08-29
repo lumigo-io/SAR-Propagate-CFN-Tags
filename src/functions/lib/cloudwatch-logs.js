@@ -20,7 +20,7 @@ const replaceTags = async (logGroupName, oldTags, newTags) => {
 		await cloudWatchLogs.untagLogGroup({ logGroupName, tags: toRemove}).promise();
 	}
   
-	const toUpsert = Object.keys(newTags).filter(x => !toRemove.includes(x));
+	const toUpsert = Object.keys(newTags).filter(key => oldTags[key] !== newTags[key]);
 	if (toUpsert.length > 0) {
 		log.info("upserting tags...", {
 			logGroupName,
