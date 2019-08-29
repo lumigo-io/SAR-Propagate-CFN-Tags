@@ -1,5 +1,5 @@
 {
-  "name": "sar-propagate-cloudformation-tags",
+  "name": "sar-propagate-cfn-tags",
   "private": true,
   "version": "1.0.0",
   "description": "SAR app to propagate CloudFormation's stack tags to resources that are currently not propagated automatically - e.g. CloudWatch Logs.",
@@ -7,7 +7,7 @@
   "scripts": {
     "test": "jest --config=jest.config.js",
     "test:lint": "eslint .",
-    "package": "sam package --template-file template.yml --output-template-file packaged.yml --s3-bucket sar-lambda-janitor",
+    "package": "sam package --template-file template.yml --output-template-file packaged.yml --s3-bucket sar-propagate-cfn-tags",
     "publish": "sam publish --template packaged.yml --region us-east-1"
   },
   "repository": {
