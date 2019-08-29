@@ -1,0 +1,48 @@
+{
+  "version": "0",
+  "id": "2c262ee8-6f99-87c9-f05b-80e04fc02fb2",
+  "detail-type": "AWS API Call via CloudTrail",
+  "source": "aws.cloudformation",
+  "account": "374852340823",
+  "time": "2019-08-29T18:21:00Z",
+  "region": "us-east-1",
+  "resources": [],
+  "detail": {
+      "eventVersion": "1.05",
+      "userIdentity": {
+          "type": "IAMUser",
+          "principalId": "ASDFSDFSDFSDFSDFSDFF",
+          "arn": "arn:aws:iam::374852340823:user/yan.cui",
+          "accountId": "374852340823",
+          "accessKeyId": "ASDFSDFSDFSDFSDFSDFF",
+          "userName": "yan.cui"
+      },
+      "eventTime": "2019-08-29T18:21:00Z",
+      "eventSource": "cloudformation.amazonaws.com",
+      "eventName": "CreateStack",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "89.32.120.234",
+      "userAgent": "aws-sdk-nodejs/2.503.0 darwin/v10.16.0 promise",
+      "requestParameters": {
+          "capabilities": [
+              "CAPABILITY_IAM",
+              "CAPABILITY_NAMED_IAM"
+          ],
+          "onFailure": "DELETE",
+          "parameters": [],
+          "tags": [
+              {
+                  "value": "dev",
+                  "key": "STAGE"
+              }
+          ],
+          "stackName": "hello-world-dev"
+      },
+      "responseElements": {
+          "stackId": "arn:aws:cloudformation:us-east-1:374852340823:stack/hello-world-dev/c0fdf570-ca89-11e9-b86a-12f2c8f206e2"
+      },
+      "requestID": "c0f9b01e-ca89-11e9-87ec-43820a5e1255",
+      "eventID": "c599d189-235d-421c-90c1-52865365b5fc",
+      "eventType": "AwsApiCall"
+  }
+}

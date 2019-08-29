@@ -1,0 +1,41 @@
+{
+  "version": "0",
+  "id": "b594d4c8-1077-c57c-2fb9-3531379e7ae6",
+  "detail-type": "AWS API Call via CloudTrail",
+  "source": "aws.cloudformation",
+  "account": "374852340823",
+  "time": "2019-08-29T18:21:36Z",
+  "region": "us-east-1",
+  "resources": [],
+  "detail": {
+      "eventVersion": "1.05",
+      "userIdentity": {
+          "type": "IAMUser",
+          "principalId": "ASDFSDFSDFSDFSDFSDFF",
+          "arn": "arn:aws:iam::374852340823:user/yan.cui",
+          "accountId": "374852340823",
+          "accessKeyId": "ASDFSDFSDFSDFSDFSDFF",
+          "userName": "yan.cui"
+      },
+      "eventTime": "2019-08-29T18:21:36Z",
+      "eventSource": "cloudformation.amazonaws.com",
+      "eventName": "ValidateTemplate",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "89.32.120.234",
+      "userAgent": "aws-sdk-nodejs/2.503.0 darwin/v10.16.0 promise",
+      "requestParameters": {
+          "templateURL": "https://s3.amazonaws.com/hello-world-dev-serverlessdeploymentbucket-1f4cvn2s6w306/serverless/hello-world/dev/1567102859219-2019-08-29T18:20:59.219Z/compiled-cloudformation-template.json"
+      },
+      "responseElements": {
+          "parameters": [],
+          "description": "The AWS CloudFormation template for this Serverless application",
+          "capabilitiesReason": "The following resource(s) require capabilities: [AWS::IAM::Role]",
+          "capabilities": [
+              "CAPABILITY_NAMED_IAM"
+          ]
+      },
+      "requestID": "d67961f8-ca89-11e9-816b-1d2ea2948a27",
+      "eventID": "80eaf44e-d33e-4e0b-8143-106e63516d06",
+      "eventType": "AwsApiCall"
+  }
+}

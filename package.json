@@ -1,5 +1,5 @@
 {
-  "name": "sar-cloudformation-resource-tags",
+  "name": "sar-propagate-cloudformation-tags",
   "private": true,
   "version": "1.0.0",
   "description": "SAR app to propagate CloudFormation's stack tags to resources that are currently not propagated automatically - e.g. CloudWatch Logs.",
@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/lumigo-io/SAR-CloudFormation-Resource-Tags#readme",
   "dependencies": {
+    "@dazn/lambda-powertools-logger": "^1.9.0",
     "aws-sdk": "^2.418.0"
   },
   "devDependencies": {

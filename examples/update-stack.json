@@ -1,0 +1,42 @@
+{
+  "version": "0",
+  "id": "98b03a6d-8d45-a504-b21e-3dd182c172f3",
+  "detail-type": "AWS API Call via CloudTrail",
+  "source": "aws.cloudformation",
+  "account": "374852340823",
+  "time": "2019-08-29T18:15:57Z",
+  "region": "us-east-1",
+  "resources": [],
+  "detail": {
+      "eventVersion": "1.05",
+      "userIdentity": {
+          "type": "IAMUser",
+          "principalId": "ASDFSDFSDFSDFSDFSDFF",
+          "arn": "arn:aws:iam::374852340823:user/yan.cui",
+          "accountId": "374852340823",
+          "accessKeyId": "ASDFSDFSDFSDFSDFSDFF",
+          "userName": "yan.cui"
+      },
+      "eventTime": "2019-08-29T18:15:57Z",
+      "eventSource": "cloudformation.amazonaws.com",
+      "eventName": "UpdateStack",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "89.32.120.234",
+      "userAgent": "aws-sdk-nodejs/2.503.0 darwin/v10.16.0 promise",
+      "requestParameters": {
+          "templateURL": "https://s3.amazonaws.com/hello-world-dev-serverlessdeploymentbucket-34qbepei04xr/serverless/hello-world/dev/1567102552546-2019-08-29T18:15:52.546Z/compiled-cloudformation-template.json",
+          "parameters": [],
+          "stackName": "hello-world-dev",
+          "capabilities": [
+              "CAPABILITY_IAM",
+              "CAPABILITY_NAMED_IAM"
+          ]
+      },
+      "responseElements": {
+          "stackId": "arn:aws:cloudformation:us-east-1:374852340823:stack/hello-world-dev/e25369b0-c6ad-11e9-8df2-0e061c1f1416"
+      },
+      "requestID": "0c5925f7-ca89-11e9-ab00-055f8bd29f39",
+      "eventID": "60388220-8eb7-4865-a172-f715b7259820",
+      "eventType": "AwsApiCall"
+  }
+}

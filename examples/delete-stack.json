@@ -1,0 +1,34 @@
+{
+  "version": "0",
+  "id": "5f4501c7-827c-2e50-b3bd-71ebcd6f4446",
+  "detail-type": "AWS API Call via CloudTrail",
+  "source": "aws.cloudformation",
+  "account": "374852340823",
+  "time": "2019-08-29T18:22:33Z",
+  "region": "us-east-1",
+  "resources": [],
+  "detail": {
+      "eventVersion": "1.05",
+      "userIdentity": {
+          "type": "IAMUser",
+          "principalId": "ASDFSDFSDFSDFSDFSDFF",
+          "arn": "arn:aws:iam::374852340823:user/yan.cui",
+          "accountId": "374852340823",
+          "accessKeyId": "ASDFSDFSDFSDFSDFSDFF",
+          "userName": "yan.cui"
+      },
+      "eventTime": "2019-08-29T18:22:33Z",
+      "eventSource": "cloudformation.amazonaws.com",
+      "eventName": "DeleteStack",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "89.32.120.234",
+      "userAgent": "aws-sdk-nodejs/2.503.0 darwin/v10.16.0 promise",
+      "requestParameters": {
+          "stackName": "hello-world-dev"
+      },
+      "responseElements": null,
+      "requestID": "f848ee4e-ca89-11e9-8835-45b96de69f9b",
+      "eventID": "5c5cc645-e1ec-4133-9807-2a5df509ae71",
+      "eventType": "AwsApiCall"
+  }
+}
