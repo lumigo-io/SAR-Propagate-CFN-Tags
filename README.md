@@ -1,6 +1,7 @@
 # SAR-Propagate-CloudFormation-Tags
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![CircleCI](https://circleci.com/gh/lumigo-io/SAR-Propagate-CFN-Tags.svg?style=svg)](https://circleci.com/gh/lumigo-io/SAR-Propagate-CFN-Tags)
 
 SAR app to propagate CloudFormation's stack tags to resources that are currently not propagated automatically - e.g. CloudWatch Logs.
 
