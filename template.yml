@@ -1,0 +1,48 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform: AWS::Serverless-2016-10-31
+
+Metadata:
+  AWS::ServerlessRepo::Application:
+    Name: propagate-cfn-tags
+    Description: Propagates CloudFormation's stack tags to resources that are currently not propagated automatically - e.g. CloudWatch Logs.
+    Author: Lumigo
+    SpdxLicenseId: MIT
+    LicenseUrl: LICENSE
+    ReadmeUrl: README.md
+    Labels: ['lambda', 'cloudformation', 'tags', 'automation']
+    HomePageUrl: https://github.com/lumigo-io/SAR-Propagate-CFN-Tags.git
+    SemanticVersion: 1.0.0
+    SourceCodeUrl: https://github.com/lumigo-io/SAR-Propagate-CFN-Tags.git
+
+Resources:
+  Propagate:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/functions/propagate.handler
+      Runtime: nodejs8.10
+      Timeout: 60
+      Policies:
+        - Statement:
+            Effect: Allow
+            Action:
+              - cloudformation:DescribeStacks
+              - cloudformation:DescribeStackResources
+              - logs:ListTagsLogGroup
+              - logs:TagLogGroup
+              - logs:UntagLogGroup
+            Resource: "*"
+      Events:
+        CloudFormationEvent:
+          Type: CloudWatchEvent
+          Properties:
+            Pattern:
+              source:
+                - aws.cloudformation
+              detail-type:
+                - AWS API Call via CloudTrail
+              detail:
+                eventSource:
+                  - cloudformation.amazonaws.com
+                eventName:
+                  - CreateStack
+                  - UpdateStack
