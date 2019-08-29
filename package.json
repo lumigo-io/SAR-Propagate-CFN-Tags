@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lumigo-io/SAR-CloudFormation-Resource-Tags.git"
+    "url": "git+https://github.com/lumigo-io/SAR-Propagate-CFN-Tags.git"
   },
   "author": "Lumigo LTD (https://lumigo.io)",
   "license": "Apache 2",
   "bugs": {
-    "url": "https://github.com/lumigo-io/SAR-CloudFormation-Resource-Tags/issues"
+    "url": "https://github.com/lumigo-io/SAR-Propagate-CFN-Tags/issues"
   },
-  "homepage": "https://github.com/lumigo-io/SAR-CloudFormation-Resource-Tags#readme",
+  "homepage": "https://github.com/lumigo-io/SAR-Propagate-CFN-Tags#readme",
   "dependencies": {
     "@dazn/lambda-powertools-logger": "^1.9.0",
     "aws-sdk": "^2.418.0"
