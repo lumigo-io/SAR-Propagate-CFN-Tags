@@ -1,0 +1,58 @@
+{
+  "name": "sar-cloudformation-resource-tags",
+  "private": true,
+  "version": "1.0.0",
+  "description": "SAR app to propagate CloudFormation's stack tags to resources that are currently not propagated automatically - e.g. CloudWatch Logs.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --config=jest.config.js",
+    "test:lint": "eslint .",
+    "package": "sam package --template-file template.yml --output-template-file packaged.yml --s3-bucket sar-lambda-janitor",
+    "publish": "sam publish --template packaged.yml --region us-east-1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lumigo-io/SAR-CloudFormation-Resource-Tags.git"
+  },
+  "author": "Lumigo LTD (https://lumigo.io)",
+  "license": "Apache 2",
+  "bugs": {
+    "url": "https://github.com/lumigo-io/SAR-CloudFormation-Resource-Tags/issues"
+  },
+  "homepage": "https://github.com/lumigo-io/SAR-CloudFormation-Resource-Tags#readme",
+  "dependencies": {
+    "aws-sdk": "^2.418.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^8.1.0",
+    "@commitlint/config-conventional": "^8.0.0",
+    "coveralls": "^3.0.2",
+    "eslint": "^5.13.0",
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-config-standard": "^13.0.1",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-node": "^9.1.0",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "husky": "^3.0.0",
+    "jest": "^24.4.0",
+    "lint-staged": "^9.1.0",
+    "lodash": "^4.17.15"
+  },
+  "greenkeeper": {
+    "ignore": [
+      "eslint"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint"
+    ]
+  }
+}
