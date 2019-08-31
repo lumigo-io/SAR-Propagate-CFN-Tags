@@ -11,8 +11,10 @@ Go to this [page](https://serverlessrepo.aws.amazon.com/applications/arn:aws:ser
 
 This app would deploy the following resources to your region:
 
-* a Lambda function that propagates CloudFormation's tags to resources that aren't tagged automatically
-* a CloudWatch event pattern that triggers the Lambda function whenever `CloudFormation:CreateStack` and `CloudFormation:UpdateStack` events are captured by CloudTrail
+* a `Propagate` Lambda function that propagates CloudFormation's tags to resources that aren't tagged automatically
+* a CloudWatch event pattern that triggers the `Propagate` function whenever `CloudFormation:CreateStack` and `CloudFormation:UpdateStack` events are captured by CloudTrail
+* a `PropagateAll` Lambda function that iterates through all CloudFormation stacks in the region and propates their tags, this function is only triggered once, when you deploy the SAR app
+* a `Custom::LambdaInvocation` CloudFormation custom resource, which would trigger the `PropagateAll` Lambda function during the deployment of this SAR app
 
 ## Deploying via SAM/Serverless framework/CloudFormation
 
