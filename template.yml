@@ -58,7 +58,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: src/functions/propagate-all.handler
-      Timeout: 900
+      Timeout: 840
       Policies:
         - Statement:
             Effect: Allow
