@@ -8,7 +8,7 @@ const ONE_MINUTE = 60 * 1000;
 let stackNames = [];
 
 module.exports.handler = async (event, context) => {
-	log.debug("received event...", event);
+	log.debug("received event...", { event });
   
 	if (!_.isEmpty(stackNames)) {
 		log.info("continuing from last recursion...", { 

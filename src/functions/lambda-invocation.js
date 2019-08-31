@@ -2,8 +2,10 @@ const AWS = require("./lib/aws");
 const lambda = new AWS.Lambda();
 const customResource = require("./lib/custom-resource");
 const schema = require("./lambda-invocation.schema");
+const log = require("@dazn/lambda-powertools-logger");
 
 const invokeFunction = async ({ FunctionName, Payload }) => {
+	log.debug("invoking Lambda function...", { functionName: FunctionName });
 	await lambda.invoke({
 		FunctionName,
 		InvocationType: "RequestResponse",

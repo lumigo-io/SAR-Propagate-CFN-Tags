@@ -76,6 +76,7 @@ module.exports = (schema, createFn, updateFn, deleteFn) =>
 		try {
 			const id = await apply(event, value);
 			await respond(event, "SUCCESS", id);
+			log.info("custom resource is created", { id });
 		} catch (error) {
 			log.error("failed to create custom Lambda invocation resource...", error);
 			await respond(event, "FAILED", "Failure", error.message);

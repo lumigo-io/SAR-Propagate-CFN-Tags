@@ -18,7 +18,7 @@ const propagateTags = async (stackName) => {
 	});
   
 	if (_.isEmpty(tags)) {
-		log.info("stack has no tags, skipped...");
+		log.info("stack has no tags, skipped...", { stackName });
 		return;
 	}
   
@@ -27,17 +27,17 @@ const propagateTags = async (stackName) => {
 		.map(x => x.physicalResourceId);
     
 	if (_.isEmpty(logGroupNames)) {
-		log.info("no log groups, skipped...");
+		log.info("no log groups, skipped...", { stackName });
 		return;
 	}
 
-	log.debug("found log groups...", { count: logGroupNames.length });  
+	log.debug("found log groups...", { stackName, count: logGroupNames.length });  
 	for (const logGroupName of logGroupNames) {
 		const groupTags = await cloudWatchLogs.getTags(logGroupName);
-		log.debug("found log group tags...", { logGroupName, tags: groupTags });
+		log.debug("found log group tags...", { stackName, logGroupName, tags: groupTags });
     
 		await cloudWatchLogs.replaceTags(logGroupName, groupTags, tags);
-		log.debug("replaced log group tags...", { logGroupName });
+		log.debug("replaced log group tags...", { stackName, logGroupName });
 	}
 };
 
