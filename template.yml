@@ -75,7 +75,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: src/functions/lambda-invocation.handler
-      Timeout: 60
+      Timeout: 900
       Policies:
         - Statement:
             Effect: Allow
