@@ -31,48 +31,6 @@ afterEach(() => {
 	mockTagLogGroup.mockClear();
 });
 
-const givenStackHasTags = (tags) => {
-	const stackTags = Object.keys(tags).map(key => ({
-		Key: key,
-		Value: tags[key]
-	}));
-
-	mockDescribeStacks.mockReturnValue({
-		promise: () => Promise.resolve({
-			Stacks: [{
-				StackId: "test",
-				Tags: stackTags
-			}]
-		})
-	});
-};
-
-const givenStackIsNotFound = () => {
-	mockDescribeStacks.mockReturnValue({
-		promise: () => Promise.resolve({
-			Stacks: []
-		})
-	});
-};
-
-const givenStackHasResources = (resources) => {
-	const stackResources = resources.map(x => ({
-		ResourceType: x.resourceType,
-		PhysicalResourceId: x.physicalResourceId
-	}));
-	mockDescribeStackResources.mockReturnValue({
-		promise: () => Promise.resolve({
-			StackResources: stackResources
-		})
-	});
-};
-
-const givenLogGroupHasTags = (tags) => {
-	mockListTagsLogGroup.mockReturnValue({
-		promise: () => Promise.resolve({ tags })
-	});
-};
-
 describe("propagate handler", () => {
 	const getEvent = (eventName = "CreateStack", stackName = "test") => ({
 		detail: {
@@ -201,3 +159,45 @@ describe("propagate handler", () => {
 		expect(mockUntagLogGroup).not.toBeCalled();
 	});
 });
+
+function givenStackHasTags(tags) {
+	const stackTags = Object.keys(tags).map(key => ({
+		Key: key,
+		Value: tags[key]
+	}));
+
+	mockDescribeStacks.mockReturnValue({
+		promise: () => Promise.resolve({
+			Stacks: [{
+				StackId: "test",
+				Tags: stackTags
+			}]
+		})
+	});
+}
+
+function givenStackIsNotFound() {
+	mockDescribeStacks.mockReturnValue({
+		promise: () => Promise.resolve({
+			Stacks: []
+		})
+	});
+}
+
+function givenStackHasResources(resources) {
+	const stackResources = resources.map(x => ({
+		ResourceType: x.resourceType,
+		PhysicalResourceId: x.physicalResourceId
+	}));
+	mockDescribeStackResources.mockReturnValue({
+		promise: () => Promise.resolve({
+			StackResources: stackResources
+		})
+	});
+}
+
+function givenLogGroupHasTags(tags) {
+	mockListTagsLogGroup.mockReturnValue({
+		promise: () => Promise.resolve({ tags })
+	});
+}

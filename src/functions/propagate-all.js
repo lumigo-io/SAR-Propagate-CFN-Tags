@@ -21,20 +21,16 @@ module.exports.handler = async (event, context) => {
 		});
 	}
   
-	try {
-		do {
-			const stackName = stackNames.pop();
-			await propagateTags(stackName);
-			log.debug("processed stack...", { stackName });
-		} while (!_.isEmpty(stackNames) && context.getRemainingTimeInMillis() > ONE_MINUTE);
+	do {
+		const stackName = stackNames.pop();
+		await propagateTags(stackName);
+		log.debug("processed stack...", { stackName });
+	} while (!_.isEmpty(stackNames) && context.getRemainingTimeInMillis() > ONE_MINUTE);
 
-		if (!_.isEmpty(stackNames)) {
-			await lambda.recurse(event);
-			return "to be continued...";
-		} else {
-			return "the end...";
-		}
-	} catch (err) {
-		throw err;
-	}  
+	if (!_.isEmpty(stackNames)) {
+		await lambda.recurse(event);
+		return "to be continued...";
+	} else {
+		return "the end...";
+	}
 };
