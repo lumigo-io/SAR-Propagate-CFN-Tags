@@ -14,12 +14,19 @@ Metadata:
     SemanticVersion: 1.0.0
     SourceCodeUrl: https://github.com/lumigo-io/SAR-Propagate-CFN-Tags.git
 
+Globals:
+  Function:
+    Runtime: nodejs8.10
+    MemorySize: 128
+    Environment:
+      Variables:
+        LOG_LEVEL: INFO
+
 Resources:
   Propagate:
     Type: AWS::Serverless::Function
     Properties:
       Handler: src/functions/propagate.handler
-      Runtime: nodejs8.10
       Timeout: 60
       Policies:
         - Statement:
@@ -51,7 +58,6 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: src/functions/propagate-all.handler
-      Runtime: nodejs8.10
       Timeout: 900
       Policies:
         - Statement:
@@ -64,28 +70,21 @@ Resources:
               - logs:TagLogGroup
               - logs:UntagLogGroup
             Resource: "*"
+
+  LambdaInvocationCustomResource:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/functions/lambda-invocation.handler
+      Timeout: 60
+      Policies:
         - Statement:
             Effect: Allow
             Action: lambda:InvokeFunction
             Resource: !GetAtt PropagateAll.Arn
 
-  LambdaInvocationCustomResource:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: src/functions/propagate.handler
-      Runtime: nodejs8.10
-      Timeout: 60
-      Policies:
-        - Statement:
-            Effect: Allow
-            Action:
-              - lambda:InvokeFunction
-            Resource:
-              !GetAtt PropagateAll.Arn
-
   # custom resource to invoke the PropagateAll function during deployment
   InvokePropagateAll:
-    Type: Custom::Lambda::Invocation
+    Type: Custom::LambdaInvocation
     DependsOn:
       - PropagateAll
       - LambdaInvocationCustomResource
