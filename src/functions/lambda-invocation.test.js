@@ -31,7 +31,7 @@ afterEach(() => {
 
 describe("lambda-invocation", () => {
 	const genEvent = (reqType, functionName, payload = {}) => ({
-		ResourceType: "Custom::Lambda::Invocation",
+		ResourceType: "Custom::LambdaInvocation",
 		RequestType: reqType,
 		PhysicalResourceId: "1234",
 		ResponseURL: "https://theburningmonk.com",
@@ -98,7 +98,7 @@ describe("lambda-invocation", () => {
 	test("Should error if FunctionName is not an ARN", async () => {
 		const handler = require("./lambda-invocation").handler;
 		const event = {
-			ResourceType: "Custom::Lambda::Invocation",
+			ResourceType: "Custom::LambdaInvocation",
 			RequestType: "Create",
 			PhysicalResourceId: "1234",
 			ResponseURL: "https://theburningmonk.com",
