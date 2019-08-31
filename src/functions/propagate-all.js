@@ -24,7 +24,7 @@ module.exports.handler = async (event, context) => {
 	do {
 		const stackName = stackNames.pop();
 		await propagateTags(stackName);
-		log.debug("processed stack...", { stackName });
+		log.info("processed stack...", { stackName });
 	} while (!_.isEmpty(stackNames) && context.getRemainingTimeInMillis() > ONE_MINUTE);
 
 	if (!_.isEmpty(stackNames)) {
