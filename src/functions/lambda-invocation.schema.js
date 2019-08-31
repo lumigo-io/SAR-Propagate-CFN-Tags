@@ -1,6 +1,6 @@
 const Joi = require("@hapi/joi");
 
-const ARN = Joi.string().regex(/arn:aws:lambda/g);
+const ARN = Joi.string().regex(/arn:aws:lambda/);
 
 const LambdaInvocation = Joi.object().keys({
 	FunctionName: ARN.required(),
