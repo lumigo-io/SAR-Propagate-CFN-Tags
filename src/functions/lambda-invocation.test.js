@@ -11,7 +11,7 @@ console.log = jest.fn();
 
 beforeEach(() => {
 	mockInvoke.mockReturnValueOnce({
-		promise: () => Promise.resolve()
+		promise: () => Promise.resolve({})
 	});
   
 	// eslint-disable-next-line no-unused-vars

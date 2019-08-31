@@ -6,11 +6,15 @@ const log = require("@dazn/lambda-powertools-logger");
 
 const invokeFunction = async ({ FunctionName, Payload }) => {
 	log.debug("invoking Lambda function...", { functionName: FunctionName });
-	await lambda.invoke({
+	const resp = await lambda.invoke({
 		FunctionName,
 		InvocationType: "RequestResponse",
 		Payload: JSON.stringify(Payload)
 	}).promise();
+  
+	if (resp.FunctionError) {
+		throw new Error(resp.FunctionError);
+	}
 };
 
 const onCreate = async (invocation) => {
