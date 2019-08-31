@@ -46,3 +46,50 @@ Resources:
                 eventName:
                   - CreateStack
                   - UpdateStack
+
+  PropagateAll:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/functions/propagate-all.handler
+      Runtime: nodejs8.10
+      Timeout: 900
+      Policies:
+        - Statement:
+            Effect: Allow
+            Action:
+              - cloudformation:ListStacks
+              - cloudformation:DescribeStacks
+              - cloudformation:DescribeStackResources
+              - logs:ListTagsLogGroup
+              - logs:TagLogGroup
+              - logs:UntagLogGroup
+            Resource: "*"
+        - Statement:
+            Effect: Allow
+            Action: lambda:InvokeFunction
+            Resource: !GetAtt PropagateAll.Arn
+
+  LambdaInvocationCustomResource:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/functions/propagate.handler
+      Runtime: nodejs8.10
+      Timeout: 60
+      Policies:
+        - Statement:
+            Effect: Allow
+            Action:
+              - lambda:InvokeFunction
+            Resource:
+              !GetAtt PropagateAll.Arn
+
+  # custom resource to invoke the PropagateAll function during deployment
+  InvokePropagateAll:
+    Type: Custom::Lambda::Invocation
+    DependsOn:
+      - PropagateAll
+      - LambdaInvocationCustomResource
+    Properties:
+      ServiceToken: !GetAtt LambdaInvocationCustomResource.Arn
+      FunctionName: !Ref PropagateAll
+      Payload: {}

@@ -2,6 +2,30 @@ const _ = require("lodash");
 const AWS = require("./aws");
 const cloudFormation = new AWS.CloudFormation();
 
+const listStacks = async () => {
+	const loop = async (nextToken, acc = []) => {
+		const resp = await cloudFormation.listStacks({
+			NextToken: nextToken,
+			StackStatusFilter: [
+				"CREATE_COMPLETE", 
+				"ROLLBACK_COMPLETE", 
+				"UPDATE_COMPLETE", 
+				"UPDATE_ROLLBACK_COMPLETE"
+			]
+		}).promise();
+    
+		const newAcc = acc.concat(resp.StackSummaries.map(x => x.StackName));
+    
+		if (resp.NextToken) {
+			return await loop(resp.NextToken, newAcc);
+		} else {
+			return newAcc;
+		}
+	};
+
+	return loop();
+};
+
 const describeStack = async (stackName) => {
 	const resp = await cloudFormation.describeStacks({
 		StackName: stackName
@@ -41,5 +65,6 @@ const getResources = async (stackName) => {
 };
 
 module.exports = {
-	describeStack
+	describeStack,
+	listStacks
 };
