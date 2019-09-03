@@ -21,7 +21,7 @@ This app would deploy the following resources to your region:
 To deploy this app via SAM, you need something like this in the CloudFormation template:
 
 ```yml
-AutoDeployMyAwesomeLambdaLayer:
+PropagateCloudFormationTags:
   Type: AWS::Serverless::Application
   Properties:
     Location:
