@@ -5,6 +5,7 @@
   "description": "SAR app to propagate CloudFormation's stack tags to resources that are currently not propagated automatically - e.g. CloudWatch Logs.",
   "main": "index.js",
   "scripts": {
+    "codecov": "codecov",
     "test": "jest --config=jest.config.js",
     "test:lint": "eslint .",
     "package": "sam package --template-file template.yml --output-template-file packaged.yml --s3-bucket sar-propagate-cfn-tags",
@@ -29,6 +30,7 @@
   "devDependencies": {
     "@commitlint/cli": "^8.1.0",
     "@commitlint/config-conventional": "^8.0.0",
+    "codecov": "^3.5.0",
     "coveralls": "^3.0.2",
     "eslint": "^5.13.0",
     "eslint-config-prettier": "^6.0.0",

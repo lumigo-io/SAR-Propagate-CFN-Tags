@@ -6,12 +6,12 @@ Metadata:
     Name: propagate-cfn-tags
     Description: Propagates CloudFormation's stack tags to resources that are currently not propagated automatically - e.g. CloudWatch Logs.
     Author: Lumigo
-    SpdxLicenseId: MIT
+    SpdxLicenseId: Apache-2.0
     LicenseUrl: LICENSE
     ReadmeUrl: README.md
-    Labels: ['lambda', 'cloudformation', 'tags', 'automation']
+    Labels: ['lambda', 'cloudformation', 'tags', 'devops']
     HomePageUrl: https://github.com/lumigo-io/SAR-Propagate-CFN-Tags.git
-    SemanticVersion: 1.1.0
+    SemanticVersion: 1.2.0
     SourceCodeUrl: https://github.com/lumigo-io/SAR-Propagate-CFN-Tags.git
 
 Globals:
@@ -72,15 +72,11 @@ Resources:
             Resource: "*"
 
   LambdaInvocationCustomResource:
-    Type: AWS::Serverless::Function
+    Type: AWS::Serverless::Application
     Properties:
-      Handler: src/functions/lambda-invocation.handler
-      Timeout: 900
-      Policies:
-        - Statement:
-            Effect: Allow
-            Action: lambda:InvokeFunction
-            Resource: !GetAtt PropagateAll.Arn
+      Location:
+        ApplicationId: arn:aws:serverlessrepo:us-east-1:374852340823:applications/lambda-invocation-cfn-custom-resource
+        SemanticVersion: 1.0.0
 
   # custom resource to invoke the PropagateAll function during deployment
   InvokePropagateAll:
@@ -89,6 +85,6 @@ Resources:
       - PropagateAll
       - LambdaInvocationCustomResource
     Properties:
-      ServiceToken: !GetAtt LambdaInvocationCustomResource.Arn
+      ServiceToken: !GetAtt LambdaInvocationCustomResource.Outputs.FunctionArn
       FunctionName: !Ref PropagateAll
       Payload: {}
