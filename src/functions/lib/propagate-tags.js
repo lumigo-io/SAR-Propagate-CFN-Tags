@@ -3,6 +3,23 @@ const cloudFormation = require("./cloudformation");
 const cloudWatchLogs = require("./cloudwatch-logs");
 const log = require("@dazn/lambda-powertools-logger");
 
+const replaceTags = async (stackName, tags, logGroupName) => {
+	try {
+		const groupTags = await cloudWatchLogs.getTags(logGroupName);
+		log.debug("found log group tags...", { stackName, logGroupName, tags: groupTags });
+      
+		await cloudWatchLogs.replaceTags(logGroupName, groupTags, tags);
+		log.debug("replaced log group tags...", { stackName, logGroupName });
+	} catch (error) {
+		if (error.name === "ResourceNotFoundException") {
+			log.warn("log group does not exist, skipped...", { logGroupName });
+		} else {
+			log.error("failed to replace log group tags", { logGroupName }, error);
+			throw error;
+		}
+	}
+};
+
 const propagateTags = async (stackName) => {
 	const { stackId, tags, resources } = await cloudFormation.describeStack(stackName);
   
@@ -33,11 +50,7 @@ const propagateTags = async (stackName) => {
 
 	log.debug("found log groups...", { stackName, count: logGroupNames.length });  
 	for (const logGroupName of logGroupNames) {
-		const groupTags = await cloudWatchLogs.getTags(logGroupName);
-		log.debug("found log group tags...", { stackName, logGroupName, tags: groupTags });
-    
-		await cloudWatchLogs.replaceTags(logGroupName, groupTags, tags);
-		log.debug("replaced log group tags...", { stackName, logGroupName });
+		await replaceTags(stackName, tags, logGroupName);
 	}
 };
 

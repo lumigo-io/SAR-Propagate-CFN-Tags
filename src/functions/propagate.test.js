@@ -158,6 +158,41 @@ describe("propagate handler", () => {
 		expect(mockTagLogGroup).not.toBeCalled();
 		expect(mockUntagLogGroup).not.toBeCalled();
 	});
+  
+	test("ResourceNotFound exceptions are swallowed", async () => {
+		givenStackHasResources([{
+			resourceType: "AWS::Logs::LogGroup",
+			physicalResourceId: "/aws/lambda/hello-world-dev"
+		}]);
+		givenStackHasTags({ Author: "theburningmonk", Team: "lumigo" });
+		givenLogGroupDoesNotExist();
+
+		const handler = require("./propagate").handler;
+		await handler(getEvent());
+    
+		expect(mockListTagsLogGroup).toBeCalled();
+		expect(mockTagLogGroup).not.toBeCalled();
+		expect(mockUntagLogGroup).not.toBeCalled();
+	});
+  
+	test("Other exceptions are not swallowed", async () => {
+		givenStackHasResources([{
+			resourceType: "AWS::Logs::LogGroup",
+			physicalResourceId: "/aws/lambda/hello-world-dev"
+		}]);
+		givenStackHasTags({ Author: "theburningmonk", Team: "lumigo" });
+		givenListTagsLogGroupFails("boom", "there goes another one!");
+
+		const handler = require("./propagate").handler;
+		await expect(handler(getEvent())).rejects.toEqual(
+			new CloudWatchLogsError(
+				"boom", 
+				"there goes another one!"));
+    
+		expect(mockListTagsLogGroup).toBeCalled();
+		expect(mockTagLogGroup).not.toBeCalled();
+		expect(mockUntagLogGroup).not.toBeCalled();
+	});
 });
 
 function givenStackHasTags(tags) {
@@ -199,5 +234,28 @@ function givenStackHasResources(resources) {
 function givenLogGroupHasTags(tags) {
 	mockListTagsLogGroup.mockReturnValue({
 		promise: () => Promise.resolve({ tags })
+	});
+}
+
+class CloudWatchLogsError extends Error {
+	constructor (name, message) {
+		super(message);
+		this.name = name;
+	}
+}
+
+function givenLogGroupDoesNotExist() {
+	mockListTagsLogGroup.mockReturnValue({
+		promise: () => Promise.reject(
+			new CloudWatchLogsError(
+				"ResourceNotFoundException", 
+				"The specified log group does not exist."))
+	});
+}
+
+function givenListTagsLogGroupFails(name, message) {
+	mockListTagsLogGroup.mockReturnValue({
+		promise: () => Promise.reject(
+			new CloudWatchLogsError(name, message))
 	});
 }

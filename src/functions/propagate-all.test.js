@@ -13,6 +13,11 @@ propagateTags.propagateTags = mockPropagateTags;
 
 console.log = jest.fn();
 
+beforeEach(() => {
+	process.env.RETRY_MIN_TIMEOUT = "100";
+	process.env.RETRY_MAX_TIMEOUT = "100";
+});
+
 afterEach(() => {
 	mockListStacks.mockClear();
 	mockPropagateTags.mockClear();
@@ -27,10 +32,42 @@ describe("propagate-all", () => {
 		givenPropagateTagsSucceeds(); // stack3
     
 		const handler = require("./propagate-all").handler;
-		await handler({}, { getRemainingTimeInMillis: () => 900000 });
+		await handler();
     
 		expect(mockListStacks).toBeCalled();
 		expect(mockPropagateTags).toBeCalledTimes(3);
+	});
+  
+	describe("error handling", () => {
+		test("errors are retried", async () => {
+			givenListStacksReturns(["stack1"]);
+    
+			givenPropagateTagsFailed();   // attempt
+			givenPropagateTagsSucceeds(); // retry
+      
+			const handler = require("./propagate-all").handler;
+			await handler();
+      
+			expect(mockListStacks).toBeCalled();
+			expect(mockPropagateTags).toBeCalledTimes(2);
+		});
+    
+		test("errors are swallowed after 5 retries", async () => {
+			givenListStacksReturns(["stack1"]);
+    
+			givenPropagateTagsFailed();   // attempt 1
+			givenPropagateTagsFailed();   // retry 1
+			givenPropagateTagsFailed();   // retry 2
+			givenPropagateTagsFailed();   // retry 3
+			givenPropagateTagsFailed();   // retry 4
+			givenPropagateTagsFailed();   // retry 5
+      
+			const handler = require("./propagate-all").handler;
+			await handler();
+      
+			expect(mockListStacks).toBeCalled();
+			expect(mockPropagateTags).toBeCalledTimes(6);
+		});
 	});
 });
 
@@ -40,4 +77,8 @@ function givenListStacksReturns(stackNames) {
 
 function givenPropagateTagsSucceeds() {
 	mockPropagateTags.mockResolvedValueOnce();
+}
+
+function givenPropagateTagsFailed() {
+	mockPropagateTags.mockRejectedValueOnce(new Error("boom"));
 }
