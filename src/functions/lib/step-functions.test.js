@@ -64,6 +64,13 @@ describe("step-functions", () => {
 			team: "atlantis",
 			feature: "content-item"
 		};
+		const stackTagsKV = [{
+			key: "team",
+			value: "atlantis"
+		}, {
+			key: "feature",
+			value: "content-item"
+		}];
     
 		describe("when there is no existing tags", () => {
 			test("untagResource is not called", async () => {
@@ -73,7 +80,7 @@ describe("step-functions", () => {
 				expect(mockUntagResource).not.toBeCalled();
 				expect(mockTagResource).toBeCalledWith({
 					resourceArn: arn,
-					tags: stackTags
+					tags: stackTagsKV
 				});
 			});
 		});
@@ -89,7 +96,7 @@ describe("step-functions", () => {
 				expect(mockUntagResource).not.toBeCalled();
 				expect(mockTagResource).toBeCalledWith({
 					resourceArn: arn,
-					tags: stackTags
+					tags: stackTagsKV
 				});
 			});
 		});
@@ -108,7 +115,7 @@ describe("step-functions", () => {
 				});
 				expect(mockTagResource).toBeCalledWith({
 					resourceArn: arn,
-					tags: stackTags
+					tags: stackTagsKV
 				});
 			});
 		});
@@ -124,7 +131,7 @@ describe("step-functions", () => {
 				expect(mockUntagResource).not.toBeCalled();
 				expect(mockTagResource).toBeCalledWith({
 					resourceArn: arn,
-					tags: stackTags
+					tags: stackTagsKV
 				});
 			});
 		});

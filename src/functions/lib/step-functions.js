@@ -36,8 +36,13 @@ const replaceTags = async (arn, oldTags, newTags) => {
 			count: toUpsert.length,
 			tags: toUpsert.join(",")
 		});
+    
+		const tags = Object.keys(newTags).map(key => ({
+			key: key,
+			value: newTags[key]
+		}));
 		await StepFunctions
-			.tagResource({ resourceArn: arn, tags: newTags })
+			.tagResource({ resourceArn: arn, tags })
 			.promise();
 	}
 };
