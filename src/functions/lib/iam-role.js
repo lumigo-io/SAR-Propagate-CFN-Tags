@@ -15,7 +15,9 @@ const getTags = async (roleName) => {
 };
 
 const replaceTags = async (roleName, oldTags, newTags) => {
-	const toRemove = Object.keys(oldTags).filter(x => !newTags[x]);
+	// don't try to delete system tags, like aws:cloudformation:stack-id
+	const toRemove = Object.keys(oldTags)
+		.filter(x => !x.includes(":") && !newTags[x]);
 	if (toRemove.length > 0) {
 		log.info("removing tags...", {
 			roleName,

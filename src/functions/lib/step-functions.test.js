@@ -78,6 +78,22 @@ describe("step-functions", () => {
 			});
 		});
     
+		describe("when there are existing system tags", () => {
+			test("they are not deleted", async () => {
+				const StepFunctions = require("./step-functions");
+      
+				const oldTags = {
+					"aws:cloudformation:stack-id": "my-stack"
+				};
+				await StepFunctions.replaceTags(arn, oldTags, stackTags);
+				expect(mockUntagResource).not.toBeCalled();
+				expect(mockTagResource).toBeCalledWith({
+					resourceArn: arn,
+					tags: stackTags
+				});
+			});
+		});
+    
 		describe("when some existing tags are removed", () => {
 			test("old tags are removed", async () => {
 				const StepFunctions = require("./step-functions");

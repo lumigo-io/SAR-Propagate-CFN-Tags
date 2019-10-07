@@ -85,6 +85,22 @@ describe("iam-role", () => {
 			});
 		});
     
+		describe("when there are existing system tags", () => {
+			test("they are not deleted", async () => {
+				const IAM = require("./iam-role");
+      
+				const oldTags = {
+					"aws:cloudformation:stack-id": "my-stack"
+				};
+				await IAM.replaceTags(roleName, oldTags, stackTags);
+				expect(mockUntagRole).not.toBeCalled();
+				expect(mockTagRole).toBeCalledWith({
+					RoleName: roleName,
+					Tags: stackTagsKV
+				});
+			});
+		});
+    
 		describe("when some existing tags are removed", () => {
 			test("old tags are removed", async () => {
 				const IAM = require("./iam-role");
