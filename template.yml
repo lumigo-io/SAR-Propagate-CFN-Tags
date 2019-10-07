@@ -11,7 +11,7 @@ Metadata:
     ReadmeUrl: README.md
     Labels: ['lambda', 'cloudformation', 'tags', 'devops']
     HomePageUrl: https://github.com/lumigo-io/SAR-Propagate-CFN-Tags.git
-    SemanticVersion: 1.4.0
+    SemanticVersion: 1.4.1
     SourceCodeUrl: https://github.com/lumigo-io/SAR-Propagate-CFN-Tags.git
 
 Globals:
@@ -37,6 +37,12 @@ Resources:
               - logs:ListTagsLogGroup
               - logs:TagLogGroup
               - logs:UntagLogGroup
+              - states:ListTagsForResource
+              - states:TagResource
+              - states:UntagResource
+              - iam:ListRoleTags
+              - iam:TagRole
+              - iam:UntagRole
             Resource: "*"
       Events:
         CloudFormationEvent:
@@ -69,6 +75,12 @@ Resources:
               - logs:ListTagsLogGroup
               - logs:TagLogGroup
               - logs:UntagLogGroup
+              - states:ListTagsForResource
+              - states:TagResource
+              - states:UntagResource
+              - iam:ListRoleTags
+              - iam:TagRole
+              - iam:UntagRole
             Resource: "*"
 
   LambdaInvocationCustomResource:
