@@ -1,20 +1,43 @@
 const _ = require("lodash");
 const cloudFormation = require("./cloudformation");
-const cloudWatchLogs = require("./cloudwatch-logs");
 const log = require("@dazn/lambda-powertools-logger");
 
-const replaceTags = async (stackName, tags, logGroupName) => {
+const Resources = [
+	require("./cloudwatch-logs"),
+	require("./step-functions"),
+	require("./iam-role")
+];
+
+const replaceTags = async (stackName, tags, physicalId, Resource) => {
 	try {
-		const groupTags = await cloudWatchLogs.getTags(logGroupName);
-		log.debug("found log group tags...", { stackName, logGroupName, tags: groupTags });
+		const oldTags = await Resource.getTags(physicalId);
+		log.debug("found resource tags...", { 
+			stackName, 
+			resourceType: Resource.resourceType,
+			physicalId, 
+			tags: oldTags 
+		});
       
-		await cloudWatchLogs.replaceTags(logGroupName, groupTags, tags);
-		log.debug("replaced log group tags...", { stackName, logGroupName });
+		await Resource.replaceTags(physicalId, oldTags, tags);
+		log.debug("replaced resource tags...", { 
+			stackName,
+			resourceType: Resource.resourceType,
+			physicalId,
+			tags
+		});
 	} catch (error) {
 		if (error.name === "ResourceNotFoundException") {
-			log.warn("log group does not exist, skipped...", { logGroupName });
+			log.warn("resource does not exist, skipped...", { 
+				stackName,
+				resourceType: Resource.resourceType,
+				physicalId
+			});
 		} else {
-			log.error("failed to replace log group tags", { logGroupName }, error);
+			log.error("failed to replace resource tags", { 
+				stackName,
+				resourceType: Resource.resourceType,
+				physicalId
+			}, error);
 			throw error;
 		}
 	}
@@ -39,18 +62,27 @@ const propagateTags = async (stackName) => {
 		return;
 	}
   
-	const logGroupNames = resources
-		.filter(x => x.resourceType === "AWS::Logs::LogGroup")
-		.map(x => x.physicalResourceId);
+	for (const Resource of Resources) {
+		const physicalIds = resources
+			.filter(x => x.resourceType === Resource.resourceType)
+			.map(x => x.physicalResourceId);
+      
+		if (_.isEmpty(physicalIds)) {
+			log.info("no matching resources, skipped...", { 
+				stackName, 
+				resourceType: Resource.resourceType 
+			});
+			continue;
+		}
     
-	if (_.isEmpty(logGroupNames)) {
-		log.info("no log groups, skipped...", { stackName });
-		return;
-	}
-
-	log.debug("found log groups...", { stackName, count: logGroupNames.length });  
-	for (const logGroupName of logGroupNames) {
-		await replaceTags(stackName, tags, logGroupName);
+		log.debug("found matching resources...", { 
+			stackName, 
+			resourceType: Resource.resourceType,
+			count: physicalIds.length 
+		});
+		for (const physicalId of physicalIds) {
+			await replaceTags(stackName, tags, physicalId, Resource);
+		}
 	}
 };
 

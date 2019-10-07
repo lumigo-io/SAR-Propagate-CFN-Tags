@@ -1,5 +1,6 @@
+process.env.AWS_NODEJS_CONNECTION_REUSE_ENABLED = "1";
 const _ = require("lodash");
-const AWS = require("./aws");
+const AWS = require("aws-sdk");
 const cloudFormation = new AWS.CloudFormation();
 
 const listStacks = async () => {

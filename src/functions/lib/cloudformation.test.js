@@ -1,4 +1,4 @@
-const AWS = require("./aws");
+const AWS = require("aws-sdk");
 
 const mockListStacks = jest.fn();
 AWS.CloudFormation.prototype.listStacks = mockListStacks;

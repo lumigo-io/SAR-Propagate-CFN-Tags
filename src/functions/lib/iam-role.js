@@ -1,39 +1,45 @@
 process.env.AWS_NODEJS_CONNECTION_REUSE_ENABLED = "1";
 const AWS = require("aws-sdk");
-const cloudWatchLogs = new AWS.CloudWatchLogs();
+const IAM = new AWS.IAM();
+const _ = require("lodash");
 const log = require("@dazn/lambda-powertools-logger");
 
-const resourceType = "AWS::Logs::LogGroup";
+const resourceType = "AWS::IAM::Role";
 
-const getTags = async (logGroupName) => {
-	const resp = await cloudWatchLogs
-		.listTagsLogGroup({ logGroupName })
-		.promise();    
-	return resp.tags;
+const getTags = async (roleName) => {
+	const resp = await IAM
+		.listRoleTags({ RoleName: roleName })
+		.promise();
+	const pairs = resp.Tags.map(({ Key, Value }) => [Key, Value]);
+	return _.fromPairs(pairs);
 };
 
-const replaceTags = async (logGroupName, oldTags, newTags) => {
+const replaceTags = async (roleName, oldTags, newTags) => {
 	const toRemove = Object.keys(oldTags).filter(x => !newTags[x]);
 	if (toRemove.length > 0) {
 		log.info("removing tags...", {
-			logGroupName,
+			roleName,
 			count: toRemove.length,
 			tags: toRemove.join(",")
 		});
-		await cloudWatchLogs
-			.untagLogGroup({ logGroupName, tags: toRemove })
+		await IAM
+			.untagRole({ RoleName: roleName, TagKeys: toRemove })
 			.promise();
 	}
   
 	const toUpsert = Object.keys(newTags).filter(key => oldTags[key] !== newTags[key]);
 	if (toUpsert.length > 0) {
 		log.info("upserting tags...", {
-			logGroupName,
+			roleName,
 			count: toUpsert.length,
 			tags: toUpsert.join(",")
 		});
-		await cloudWatchLogs
-			.tagLogGroup({ logGroupName, tags: newTags })
+		const tags = Object.keys(newTags).map(key => ({
+			Key: key,
+			Value: newTags[key]
+		}));
+		await IAM
+			.tagRole({ RoleName: roleName, Tags: tags })
 			.promise();
 	}
 };
