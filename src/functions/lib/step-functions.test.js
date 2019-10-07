@@ -88,7 +88,7 @@ describe("step-functions", () => {
 				await StepFunctions.replaceTags(arn, oldTags, stackTags);
 				expect(mockUntagResource).toBeCalledWith({
 					resourceArn: arn,
-					tags: ["sprint"]
+					tagKeys: ["sprint"]
 				});
 				expect(mockTagResource).toBeCalledWith({
 					resourceArn: arn,

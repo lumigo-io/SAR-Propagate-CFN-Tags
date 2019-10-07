@@ -23,7 +23,7 @@ const replaceTags = async (arn, oldTags, newTags) => {
 			tags: toRemove.join(",")
 		});
 		await StepFunctions
-			.untagResource({ resourceArn: arn, tags: toRemove })
+			.untagResource({ resourceArn: arn, tagKeys: toRemove })
 			.promise();
 	}
   
