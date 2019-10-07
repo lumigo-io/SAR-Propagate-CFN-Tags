@@ -38,7 +38,6 @@ const replaceTags = async (stackName, tags, physicalId, Resource) => {
 				resourceType: Resource.resourceType,
 				physicalId
 			}, error);
-			throw error;
 		}
 	}
 };

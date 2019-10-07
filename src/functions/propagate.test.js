@@ -175,7 +175,7 @@ describe("propagate handler", () => {
 		expect(mockUntagLogGroup).not.toBeCalled();
 	});
   
-	test("Other exceptions are not swallowed", async () => {
+	test("Other exceptions are also swallowed", async () => {
 		givenStackHasResources([{
 			resourceType: "AWS::Logs::LogGroup",
 			physicalResourceId: "/aws/lambda/hello-world-dev"
@@ -184,10 +184,7 @@ describe("propagate handler", () => {
 		givenListTagsLogGroupFails("boom", "there goes another one!");
 
 		const handler = require("./propagate").handler;
-		await expect(handler(getEvent())).rejects.toEqual(
-			new CloudWatchLogsError(
-				"boom", 
-				"there goes another one!"));
+		await handler(getEvent());
     
 		expect(mockListTagsLogGroup).toBeCalled();
 		expect(mockTagLogGroup).not.toBeCalled();
