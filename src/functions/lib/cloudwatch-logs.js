@@ -13,7 +13,8 @@ const getTags = async (logGroupName) => {
 };
 
 const replaceTags = async (logGroupName, oldTags, newTags) => {
-	const toRemove = Object.keys(oldTags).filter(x => !newTags[x]);
+	const toRemove = Object.keys(oldTags)
+		.filter(x => !x.includes(":") && !newTags[x]);
 	if (toRemove.length > 0) {
 		log.info("removing tags...", {
 			logGroupName,
