@@ -4,31 +4,15 @@ const mockDescribeStacks = jest.fn();
 AWS.CloudFormation.prototype.describeStacks = mockDescribeStacks;
 const mockDescribeStackResources = jest.fn();
 AWS.CloudFormation.prototype.describeStackResources = mockDescribeStackResources;
-const mockListTagsLogGroup = jest.fn();
-AWS.CloudWatchLogs.prototype.listTagsLogGroup = mockListTagsLogGroup;
-const mockUntagLogGroup = jest.fn();
-AWS.CloudWatchLogs.prototype.untagLogGroup = mockUntagLogGroup;
 const mockTagLogGroup = jest.fn();
 AWS.CloudWatchLogs.prototype.tagLogGroup = mockTagLogGroup;
 
 console.log = jest.fn();
 
 beforeEach(() => {
-	mockTagLogGroup.mockReturnValue({
-		promise: () => Promise.resolve()
-	});
-  
-	mockUntagLogGroup.mockReturnValue({
-		promise: () => Promise.resolve()
-	});
-});
-
-afterEach(() => {
-	mockDescribeStacks.mockClear();
-	mockDescribeStackResources.mockClear();
-	mockListTagsLogGroup.mockClear();
-	mockUntagLogGroup.mockClear();
-	mockTagLogGroup.mockClear();
+	mockDescribeStacks.mockReset();
+	mockDescribeStackResources.mockReset();
+	mockTagLogGroup.mockReset();
 });
 
 describe("propagate handler", () => {
@@ -48,9 +32,7 @@ describe("propagate handler", () => {
 		await handler(getEvent());
     
 		expect(mockDescribeStackResources).not.toBeCalled();
-		expect(mockListTagsLogGroup).not.toBeCalled();
 		expect(mockTagLogGroup).not.toBeCalled();
-		expect(mockUntagLogGroup).not.toBeCalled();
 	});
   
 	test("nothing is done if stack has no tags", async () => {
@@ -63,9 +45,7 @@ describe("propagate handler", () => {
 		const handler = require("./propagate").handler;
 		await handler(getEvent());
     
-		expect(mockListTagsLogGroup).not.toBeCalled();
 		expect(mockTagLogGroup).not.toBeCalled();
-		expect(mockUntagLogGroup).not.toBeCalled();
 	});
   
 	test("nothing is done if stack has no log groups", async () => {
@@ -78,9 +58,7 @@ describe("propagate handler", () => {
 		const handler = require("./propagate").handler;
 		await handler(getEvent());
     
-		expect(mockListTagsLogGroup).not.toBeCalled();
 		expect(mockTagLogGroup).not.toBeCalled();
-		expect(mockUntagLogGroup).not.toBeCalled();
 	});
   
 	test("all stack tags are added to log group", async () => {
@@ -89,74 +67,15 @@ describe("propagate handler", () => {
 			physicalResourceId: "/aws/lambda/hello-world-dev"
 		}]);
 		givenStackHasTags({ Author: "theburningmonk" });
-		givenLogGroupHasTags({});
+		givenTagLogGroupSucceeds();
 
 		const handler = require("./propagate").handler;
 		await handler(getEvent());
     
-		expect(mockListTagsLogGroup).toBeCalled();
 		expect(mockTagLogGroup).toBeCalledWith({
 			logGroupName: "/aws/lambda/hello-world-dev",
 			tags: { Author: "theburningmonk" }
 		});
-		expect(mockUntagLogGroup).not.toBeCalled();
-	});
-  
-	test("existing log group tags are updated to match stack tags", async () => {
-		givenStackHasResources([{
-			resourceType: "AWS::Logs::LogGroup",
-			physicalResourceId: "/aws/lambda/hello-world-dev"
-		}]);
-		givenStackHasTags({ Author: "theburningmonk" });
-		givenLogGroupHasTags({ Author: "Yan Cui"});
-
-		const handler = require("./propagate").handler;
-		await handler(getEvent());
-    
-		expect(mockListTagsLogGroup).toBeCalled();
-		expect(mockTagLogGroup).toBeCalledWith({
-			logGroupName: "/aws/lambda/hello-world-dev",
-			tags: { Author: "theburningmonk" }
-		});
-		expect(mockUntagLogGroup).not.toBeCalled();
-	});
-  
-	test("old log group tags are removed if they are no longer on the stack", async () => {
-		givenStackHasResources([{
-			resourceType: "AWS::Logs::LogGroup",
-			physicalResourceId: "/aws/lambda/hello-world-dev"
-		}]);
-		givenStackHasTags({ Author: "theburningmonk" });
-		givenLogGroupHasTags({ Team: "lumigo" });
-
-		const handler = require("./propagate").handler;
-		await handler(getEvent());
-    
-		expect(mockListTagsLogGroup).toBeCalled();
-		expect(mockTagLogGroup).toBeCalledWith({
-			logGroupName: "/aws/lambda/hello-world-dev",
-			tags: { Author: "theburningmonk" }
-		});
-		expect(mockUntagLogGroup).toBeCalledWith({
-			logGroupName: "/aws/lambda/hello-world-dev",
-			tags: [ "Team" ]
-		});
-	});
-  
-	test("nothing is done if the log group already has exact tags to stack", async () => {
-		givenStackHasResources([{
-			resourceType: "AWS::Logs::LogGroup",
-			physicalResourceId: "/aws/lambda/hello-world-dev"
-		}]);
-		givenStackHasTags({ Author: "theburningmonk", Team: "lumigo" });
-		givenLogGroupHasTags({ Author: "theburningmonk", Team: "lumigo" });
-
-		const handler = require("./propagate").handler;
-		await handler(getEvent());
-    
-		expect(mockListTagsLogGroup).toBeCalled();
-		expect(mockTagLogGroup).not.toBeCalled();
-		expect(mockUntagLogGroup).not.toBeCalled();
 	});
   
 	test("ResourceNotFound exceptions are swallowed", async () => {
@@ -170,9 +89,7 @@ describe("propagate handler", () => {
 		const handler = require("./propagate").handler;
 		await handler(getEvent());
     
-		expect(mockListTagsLogGroup).toBeCalled();
-		expect(mockTagLogGroup).not.toBeCalled();
-		expect(mockUntagLogGroup).not.toBeCalled();
+		expect(mockTagLogGroup).toBeCalledTimes(1);
 	});
   
 	test("Other exceptions are also swallowed", async () => {
@@ -181,14 +98,12 @@ describe("propagate handler", () => {
 			physicalResourceId: "/aws/lambda/hello-world-dev"
 		}]);
 		givenStackHasTags({ Author: "theburningmonk", Team: "lumigo" });
-		givenListTagsLogGroupFails("boom", "there goes another one!");
+		givenTagLogGroupFails("boom", "there goes another one!");
 
 		const handler = require("./propagate").handler;
 		await handler(getEvent());
     
-		expect(mockListTagsLogGroup).toBeCalled();
-		expect(mockTagLogGroup).not.toBeCalled();
-		expect(mockUntagLogGroup).not.toBeCalled();
+		expect(mockTagLogGroup).toBeCalledTimes(1);
 	});
 });
 
@@ -228,9 +143,25 @@ function givenStackHasResources(resources) {
 	});
 }
 
-function givenLogGroupHasTags(tags) {
-	mockListTagsLogGroup.mockReturnValue({
-		promise: () => Promise.resolve({ tags })
+function givenLogGroupDoesNotExist() {
+	mockTagLogGroup.mockReturnValueOnce({
+		promise: () => Promise.reject(
+			new CloudWatchLogsError(
+				"ResourceNotFoundException", 
+				"The specified log group does not exist."))
+	});
+}
+
+function givenTagLogGroupFails(name, message) {
+	mockTagLogGroup.mockReturnValue({
+		promise: () => Promise.reject(
+			new CloudWatchLogsError(name, message))
+	});
+}
+
+function givenTagLogGroupSucceeds() {
+	mockTagLogGroup.mockReturnValue({
+		promise: () => Promise.resolve()
 	});
 }
 
@@ -239,20 +170,4 @@ class CloudWatchLogsError extends Error {
 		super(message);
 		this.name = name;
 	}
-}
-
-function givenLogGroupDoesNotExist() {
-	mockListTagsLogGroup.mockReturnValue({
-		promise: () => Promise.reject(
-			new CloudWatchLogsError(
-				"ResourceNotFoundException", 
-				"The specified log group does not exist."))
-	});
-}
-
-function givenListTagsLogGroupFails(name, message) {
-	mockListTagsLogGroup.mockReturnValue({
-		promise: () => Promise.reject(
-			new CloudWatchLogsError(name, message))
-	});
 }

@@ -11,7 +11,7 @@ Metadata:
     ReadmeUrl: README.md
     Labels: ['lambda', 'cloudformation', 'tags', 'devops']
     HomePageUrl: https://github.com/lumigo-io/SAR-Propagate-CFN-Tags.git
-    SemanticVersion: 1.8.0
+    SemanticVersion: 1.8.1
     SourceCodeUrl: https://github.com/lumigo-io/SAR-Propagate-CFN-Tags.git
 
 Globals:
