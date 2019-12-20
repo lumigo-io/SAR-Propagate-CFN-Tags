@@ -8,18 +8,10 @@ const Resources = [
 	require("./iam-role")
 ];
 
-const replaceTags = async (stackName, tags, physicalId, Resource) => {
+const upsertTags = async (stackName, tags, physicalId, Resource) => {
 	try {
-		const oldTags = await Resource.getTags(physicalId);
-		log.debug("found resource tags...", { 
-			stackName, 
-			resourceType: Resource.resourceType,
-			physicalId, 
-			tags: oldTags 
-		});
-      
-		await Resource.replaceTags(physicalId, oldTags, tags);
-		log.debug("replaced resource tags...", { 
+		await Resource.upsertTags(physicalId, tags);
+		log.debug("upserted resource tags...", { 
 			stackName,
 			resourceType: Resource.resourceType,
 			physicalId,
@@ -33,7 +25,7 @@ const replaceTags = async (stackName, tags, physicalId, Resource) => {
 				physicalId
 			});
 		} else {
-			log.error("failed to replace resource tags", { 
+			log.error("failed to upsert resource tags", { 
 				stackName,
 				resourceType: Resource.resourceType,
 				physicalId
@@ -68,7 +60,7 @@ const propagateTags = async (stackName) => {
       
 		if (_.isEmpty(physicalIds)) {
 			log.info("no matching resources, skipped...", { 
-				stackName, 
+				stackName,
 				resourceType: Resource.resourceType 
 			});
 			continue;
@@ -80,7 +72,7 @@ const propagateTags = async (stackName) => {
 			count: physicalIds.length 
 		});
 		for (const physicalId of physicalIds) {
-			await replaceTags(stackName, tags, physicalId, Resource);
+			await upsertTags(stackName, tags, physicalId, Resource);
 		}
 	}
 };

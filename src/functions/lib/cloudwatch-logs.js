@@ -5,42 +5,21 @@ const log = require("@dazn/lambda-powertools-logger");
 
 const resourceType = "AWS::Logs::LogGroup";
 
-const getTags = async (logGroupName) => {
-	const resp = await cloudWatchLogs
-		.listTagsLogGroup({ logGroupName })
-		.promise();    
-	return resp.tags;
-};
-
-const replaceTags = async (logGroupName, oldTags, newTags) => {
-	const toRemove = Object.keys(oldTags)
-		.filter(x => !x.includes(":") && !newTags[x]);
-	if (toRemove.length > 0) {
-		log.info("removing tags...", {
-			logGroupName,
-			count: toRemove.length,
-			tags: toRemove.join(",")
-		});
-		await cloudWatchLogs
-			.untagLogGroup({ logGroupName, tags: toRemove })
-			.promise();
-	}
-  
-	const toUpsert = Object.keys(newTags).filter(key => oldTags[key] !== newTags[key]);
-	if (toUpsert.length > 0) {
+const upsertTags = async (logGroupName, toUpsert) => {
+	const tagNames = Object.keys(toUpsert);
+	if (tagNames.length > 0) {
 		log.info("upserting tags...", {
 			logGroupName,
-			count: toUpsert.length,
-			tags: toUpsert.join(",")
+			count: tagNames.length,
+			tags: tagNames.join(",")
 		});
 		await cloudWatchLogs
-			.tagLogGroup({ logGroupName, tags: newTags })
+			.tagLogGroup({ logGroupName, tags: toUpsert })
 			.promise();
 	}
 };
 
 module.exports = {
 	resourceType,
-	getTags,
-	replaceTags
+	upsertTags
 };
