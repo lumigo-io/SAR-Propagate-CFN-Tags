@@ -5,8 +5,8 @@ const log = require("@dazn/lambda-powertools-logger");
 
 const resourceType = "AWS::SQS::Queue";
 
-const upsertTags = async (QueueUrl, toUpsert) => {
-	const tagNames = Object.keys(toUpsert);
+const upsertTags = async (QueueUrl, Tags) => {
+	const tagNames = Object.keys(Tags);
 	if (tagNames.length > 0) {
 		log.info("upserting tags...", {
 			QueueUrl,
@@ -14,10 +14,6 @@ const upsertTags = async (QueueUrl, toUpsert) => {
 			tags: tagNames.join(",")
 		});
 
-		const Tags = tagNames.map(key => ({
-			key: key,
-			value: toUpsert[key]
-		}));
 		await SQS
 			.tagQueue({ QueueUrl, Tags })
 			.promise();

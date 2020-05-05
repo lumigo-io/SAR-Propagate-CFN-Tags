@@ -23,13 +23,10 @@ describe("sqs queue", () => {
 			team: "atlantis",
 			feature: "content-item"
 		};
-		const stackTagsKV = [{
-			key: "team",
-			value: "atlantis"
-		}, {
-			key: "feature",
-			value: "content-item"
-		}];
+		const stackTagsKV = {
+			team: "atlantis" ,
+			feature: "content-item"
+		};
 
 		test("tagResource is called with new tags", async () => {
 			const SQSqueues = require("./sqs");
