@@ -5,7 +5,6 @@ const log = require("@dazn/lambda-powertools-logger");
 const Resources = [
 	require("./cloudwatch-logs"),
 	require("./step-functions"),
-	require("./iam-role"),
 	require("./sqs"),
 ];
 

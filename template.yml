@@ -40,9 +40,6 @@ Resources:
               - states:ListTagsForResource
               - states:TagResource
               - states:UntagResource
-              - iam:ListRoleTags
-              - iam:TagRole
-              - iam:UntagRole
             Resource: "*"
       Events:
         CloudFormationEvent:
@@ -83,9 +80,6 @@ Resources:
               - states:ListTagsForResource
               - states:TagResource
               - states:UntagResource
-              - iam:ListRoleTags
-              - iam:TagRole
-              - iam:UntagRole
             Resource: "*"
 
   PropagateAllLogGroup:
