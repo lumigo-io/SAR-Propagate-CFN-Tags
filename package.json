@@ -30,7 +30,7 @@
   "devDependencies": {
     "@commitlint/cli": "^8.1.0",
     "@commitlint/config-conventional": "^8.0.0",
-    "codecov": "^3.6.5",
+    "codecov": "^3.7.1",
     "coveralls": "^3.0.2",
     "eslint": "^5.13.0",
     "eslint-config-prettier": "^6.0.0",
