@@ -34,15 +34,10 @@ Resources:
             Action:
               - cloudformation:DescribeStacks
               - cloudformation:DescribeStackResources
-              - logs:ListTagsLogGroup
               - logs:TagLogGroup
-              - logs:UntagLogGroup
-              - states:ListTagsForResource
               - states:TagResource
-              - states:UntagResource
-              - iam:ListRoleTags
               - iam:TagRole
-              - iam:UntagRole
+              - sqs:TagQueue
             Resource: "*"
       Events:
         CloudFormationEvent:
@@ -78,15 +73,10 @@ Resources:
               - cloudformation:ListStacks
               - cloudformation:DescribeStacks
               - cloudformation:DescribeStackResources
-              - logs:ListTagsLogGroup
               - logs:TagLogGroup
-              - logs:UntagLogGroup
-              - states:ListTagsForResource
               - states:TagResource
-              - states:UntagResource
-              - iam:ListRoleTags
               - iam:TagRole
-              - iam:UntagRole
+              - sqs:TagQueue
             Resource: "*"
 
   PropagateAllLogGroup:
