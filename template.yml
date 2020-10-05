@@ -11,12 +11,12 @@ Metadata:
     ReadmeUrl: README.md
     Labels: ['lambda', 'cloudformation', 'tags', 'devops']
     HomePageUrl: https://github.com/lumigo-io/SAR-Propagate-CFN-Tags.git
-    SemanticVersion: 1.9.0
+    SemanticVersion: 1.10.0
     SourceCodeUrl: https://github.com/lumigo-io/SAR-Propagate-CFN-Tags.git
 
 Globals:
   Function:
-    Runtime: nodejs10.x
+    Runtime: nodejs12.x
     MemorySize: 128
     Environment:
       Variables:
@@ -36,7 +36,6 @@ Resources:
               - cloudformation:DescribeStackResources
               - logs:TagLogGroup
               - states:TagResource
-              - iam:TagRole
               - sqs:TagQueue
             Resource: "*"
       Events:
@@ -75,7 +74,6 @@ Resources:
               - cloudformation:DescribeStackResources
               - logs:TagLogGroup
               - states:TagResource
-              - iam:TagRole
               - sqs:TagQueue
             Resource: "*"
 

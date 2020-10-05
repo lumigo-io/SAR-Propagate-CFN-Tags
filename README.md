@@ -1,11 +1,11 @@
 # SAR-Propagate-CloudFormation-Tags
 
-[![Version](https://img.shields.io/badge/semver-1.9.0-blue)](template.yml)
+[![Version](https://img.shields.io/badge/semver-1.10.0-blue)](template.yml)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![CircleCI](https://circleci.com/gh/lumigo-io/SAR-Propagate-CFN-Tags.svg?style=svg)](https://circleci.com/gh/lumigo-io/SAR-Propagate-CFN-Tags)
 [![codecov](https://codecov.io/gh/lumigo-io/SAR-Propagate-CFN-Tags/branch/master/graph/badge.svg)](https://codecov.io/gh/lumigo-io/SAR-Propagate-CFN-Tags)
 
-SAR app to propagate CloudFormation's stack tags to resources that are currently not propagated automatically - e.g. CloudWatch Logs. It also propagates stack tag updates to resources whose tags are not automatically updated - e.g. Step Functions, SQS and IAM roles.
+SAR app to propagate CloudFormation's stack tags to resources that are currently not propagated automatically - e.g. CloudWatch Logs. It also propagates stack tag updates to resources whose tags are not automatically updated - e.g. Step Functions, SQS.
 
 ## Deploying to your account (via the console)
 
