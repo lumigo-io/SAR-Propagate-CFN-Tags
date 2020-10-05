@@ -59,6 +59,7 @@ Resources:
                 eventName:
                   - CreateStack
                   - UpdateStack
+                  - ExecuteChangeSet
 
   PropagateLogGroup:
     Type: AWS::Logs::LogGroup
