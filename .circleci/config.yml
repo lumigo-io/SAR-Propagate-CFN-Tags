@@ -21,7 +21,7 @@ jobs:
       - run: pip install awscli
       - run: pip install aws-sam-cli
       - run: npm ci
-      - run: npm run package
+      # - run: npm run package
       - run: npm run publish
 
 workflows:
