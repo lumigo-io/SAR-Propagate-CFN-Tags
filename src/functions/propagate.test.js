@@ -24,6 +24,14 @@ describe("propagate handler", () => {
 			}
 		}
 	});
+
+	const getEventWithNoStackName = (eventName = "CreateStack") => ({
+		detail: {
+			eventName,
+			requestParameters: {
+			}
+		}
+	});
   
 	test("nothing is done if stack is not found", async () => {
 		givenStackIsNotFound();
@@ -105,6 +113,18 @@ describe("propagate handler", () => {
     
 		expect(mockTagLogGroup).toBeCalledTimes(1);
 	});
+
+	test("propagateTags is not called if stackName is not found in the event", async () => {
+		jest.resetModules();
+		const propagateTags = require("./lib/propagate-tags");
+		const mockPropagateTags = jest.fn();
+		propagateTags.propagateTags = mockPropagateTags;
+		const handler = require("./propagate").handler;
+		await handler(getEventWithNoStackName());
+
+		expect(mockPropagateTags).not.toBeCalled();
+	});
+
 });
 
 function givenStackHasTags(tags) {
